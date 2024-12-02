@@ -54,6 +54,7 @@
                 Administrators = $Project.administrators
                 Members = $Project.members
                 Viewers = $Project.viewers
+                Supervisors = $Project.supervisors
                 Zones = $Project.zones
                 SharedResources = $Project.sharedResources
                 OperationTimeout = $Project.operationTimeout

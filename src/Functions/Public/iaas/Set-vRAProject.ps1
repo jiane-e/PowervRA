@@ -30,6 +30,9 @@
     .PARAMETER Viewers
     Viewers to set to the Project
 
+    .PARAMETER Supervisors
+    Supervisors to set to the Project
+
     .PARAMETER OperationTimeout
     Operation Timeout in seconds
 
@@ -168,6 +171,10 @@
 
         [Parameter(Mandatory=$false,ParameterSetName="ById")]
         [Parameter(Mandatory=$false,ParameterSetName="ByName")]
+        [String[]]$Supervisors,
+
+        [Parameter(Mandatory=$false,ParameterSetName="ById")]
+        [Parameter(Mandatory=$false,ParameterSetName="ByName")]
         [ValidateNotNullOrEmpty()]
         [Int]$OperationTimeout,
 
@@ -200,6 +207,7 @@
                 Administrators = $Project.administrators
                 Members = $Project.members
                 Viewers = $Project.viewers
+                Supervisors = $Project.supervisors
                 Zones = $Project.zones
                 SharedResources = $Project.sharedResources
                 OperationTimeout = $Project.operationTimeout
@@ -338,6 +346,23 @@
                         $ViewersArray += [PSCustomObject]@{email=$Viewer}
                     }
                     $Project | Add-Member -MemberType NoteProperty -Name 'viewers' -Value $ViewersArray
+                }
+            }
+
+            if ($PSBoundParameters.ContainsKey("Supervisors")){
+
+                Write-Verbose -Message "Updating Supervisors: $($ExistingProject.Supervisors.email) >> $($Supervisors)"
+                if (!$Supervisors){
+
+                    $Supervisors = @()
+                    $Project | Add-Member -MemberType NoteProperty -Name 'supervisors' -Value $Supervisors
+                }
+                else {
+                    $SupervisorsArray = @()
+                    foreach ($Supervisor in $Supervisors){
+                        $SupervisorsArray += [PSCustomObject]@{email=$Supervisor}
+                    }
+                    $Project | Add-Member -MemberType NoteProperty -Name 'supervisors' -Value $SupervisorsArray
                 }
             }
 
